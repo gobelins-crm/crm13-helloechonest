@@ -2,7 +2,8 @@ package fr.louisbl.helloechonest.playlist;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.os.AsyncTask;
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,27 +13,26 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.echonest.api.v4.EchoNestException;
 import com.echonest.api.v4.Playlist;
 import com.echonest.api.v4.Song;
 
 import fr.louisbl.helloechonest.R;
-import fr.louisbl.helloechonest.server.EchoNest;
 
 /**
  * A fragment representing a list of Items.
- * <p />
+ * <p/>
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
- * <p />
+ * <p/>
  * Activities containing this fragment MUST implement the {@link onSongClickedListener}
  * interface.
  */
-public class SongFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class SongFragment extends Fragment implements AbsListView.OnItemClickListener, LoaderManager.LoaderCallbacks<Playlist> {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RESULTS = "results";
     private static final String ARG_ARTIST = "artist";
+    private static final int LOADER_ID = 12;
 
     private int mResults;
     private String mArtist;
@@ -53,7 +53,7 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
     public static SongFragment newInstance(int results, String artist) {
         SongFragment fragment = new SongFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_RESULTS, results );
+        args.putInt(ARG_RESULTS, results);
         args.putString(ARG_ARTIST, artist);
         fragment.setArguments(args);
         return fragment;
@@ -76,27 +76,7 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
         }
 
         mAdapter = new PlayListAdapter(getActivity());
-
-        class PlayListAsyncTask extends AsyncTask<Void, Void, Void> {
-            Playlist playlist;
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    playlist = EchoNest.getArtistRadio(mResults, mArtist);
-                } catch (EchoNestException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                ((PlayListAdapter) mAdapter).addAll(playlist.getSongs());
-            }
-
-        }
-        new PlayListAsyncTask().execute();
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -121,7 +101,7 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
             mListener = (OnSongClickedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                + " must implement OnSongClickedListener");
+                    + " must implement OnSongClickedListener");
         }
     }
 
@@ -154,16 +134,34 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
         }
     }
 
+    @Override
+    public Loader<Playlist> onCreateLoader(int id, Bundle args) {
+        PlayListLoader loader = new PlayListLoader(getActivity());
+        loader.setResults(mResults);
+        loader.setArtist(mArtist);
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Playlist> loader, Playlist playlist) {
+        ((PlayListAdapter) mAdapter).addAll(playlist.getSongs());
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Playlist> loader) {
+        ((PlayListAdapter) mAdapter).clear();
+    }
+
     /**
-    * This interface must be implemented by activities that contain this
-    * fragment to allow an interaction in this fragment to be communicated
-    * to the activity and potentially other fragments contained in that
-    * activity.
-    * <p>
-    * See the Android Training lesson <a href=
-    * "http://developer.android.com/training/basics/fragments/communicating.html"
-    * >Communicating with Other Fragments</a> for more information.
-    */
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
     public interface OnSongClickedListener {
         public void onSongClicked(Song song);
     }
