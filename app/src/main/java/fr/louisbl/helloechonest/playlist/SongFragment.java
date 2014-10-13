@@ -2,6 +2,7 @@ package fr.louisbl.helloechonest.playlist;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,11 +78,19 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
         }
 
         mAdapter = new PlayListAdapter(getActivity());
-        try {
-            ((PlayListAdapter) mAdapter).addAll(EchoNest.getArtistRadio(10, "Alec Empire").getSongs());
-        } catch (EchoNestException e) {
-            e.printStackTrace();
+
+        class PlayListAsyncTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    ((PlayListAdapter) mAdapter).addAll(EchoNest.getArtistRadio(10, "Alec Empire").getSongs());
+                } catch (EchoNestException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
         }
+        new PlayListAsyncTask().execute();
     }
 
     @Override
