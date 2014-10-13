@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import fr.louisbl.helloechonest.R;
 import fr.louisbl.helloechonest.server.EchoNest;
 
-public class BasicPlayListActivity extends Activity {
+public class BasicPlayListActivity extends Activity implements SongFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,5 +39,10 @@ public class BasicPlayListActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(String id) {
+        // TODO act on fragment interaction
     }
 }
