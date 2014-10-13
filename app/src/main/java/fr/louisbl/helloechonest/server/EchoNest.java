@@ -1,4 +1,4 @@
-package fr.louisbl.helloechonest.services;
+package fr.louisbl.helloechonest.server;
 
 import android.content.Context;
 
