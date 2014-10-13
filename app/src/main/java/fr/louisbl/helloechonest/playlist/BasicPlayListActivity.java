@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.echonest.api.v4.Song;
+
 import fr.louisbl.helloechonest.R;
 import fr.louisbl.helloechonest.server.EchoNest;
 
-public class BasicPlayListActivity extends Activity implements SongFragment.OnFragmentInteractionListener {
+public class BasicPlayListActivity extends Activity implements SongFragment.OnSongClickedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +19,7 @@ public class BasicPlayListActivity extends Activity implements SongFragment.OnFr
         setContentView(R.layout.activity_basic_play_list);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, SongFragment.newInstance("param 1", "param 2"))
+                    .add(R.id.container, SongFragment.newInstance(20, "Helloween"))
                     .commit();
         }
     }
@@ -42,7 +44,7 @@ public class BasicPlayListActivity extends Activity implements SongFragment.OnFr
     }
 
     @Override
-    public void onFragmentInteraction(String id) {
-        // TODO act on fragment interaction
+    public void onSongClicked(Song song) {
+        // TODO implements onSongClicked
     }
 }

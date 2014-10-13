@@ -14,9 +14,9 @@ import android.widget.TextView;
 
 import com.echonest.api.v4.EchoNestException;
 import com.echonest.api.v4.Playlist;
+import com.echonest.api.v4.Song;
 
 import fr.louisbl.helloechonest.R;
-import fr.louisbl.helloechonest.playlist.dummy.DummyContent;
 import fr.louisbl.helloechonest.server.EchoNest;
 
 /**
@@ -25,21 +25,19 @@ import fr.louisbl.helloechonest.server.EchoNest;
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
  * <p />
- * Activities containing this fragment MUST implement the {@link Callbacks}
+ * Activities containing this fragment MUST implement the {@link onSongClickedListener}
  * interface.
  */
 public class SongFragment extends Fragment implements AbsListView.OnItemClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_RESULTS = "results";
+    private static final String ARG_ARTIST = "artist";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private int mResults;
+    private String mArtist;
 
-    private OnFragmentInteractionListener mListener;
+    private OnSongClickedListener mListener;
 
     /**
      * The fragment's ListView/GridView.
@@ -52,12 +50,11 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
      */
     private ListAdapter mAdapter;
 
-    // TODO: Rename and change types of parameters
-    public static SongFragment newInstance(String param1, String param2) {
+    public static SongFragment newInstance(int results, String artist) {
         SongFragment fragment = new SongFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_RESULTS, results );
+        args.putString(ARG_ARTIST, artist);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,8 +71,8 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mResults = getArguments().getInt(ARG_RESULTS);
+            mArtist = getArguments().getString(ARG_ARTIST);
         }
 
         mAdapter = new PlayListAdapter(getActivity());
@@ -85,7 +82,7 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    playlist = EchoNest.getArtistRadio(10, "Alec Empire");
+                    playlist = EchoNest.getArtistRadio(mResults, mArtist);
                 } catch (EchoNestException e) {
                     e.printStackTrace();
                 }
@@ -121,10 +118,10 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnSongClickedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                + " must implement OnFragmentInteractionListener");
+                + " must implement OnSongClickedListener");
         }
     }
 
@@ -140,7 +137,7 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
+            mListener.onSongClicked((Song) mAdapter.getItem(position));
         }
     }
 
@@ -167,9 +164,8 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
     * "http://developer.android.com/training/basics/fragments/communicating.html"
     * >Communicating with Other Fragments</a> for more information.
     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+    public interface OnSongClickedListener {
+        public void onSongClicked(Song song);
     }
 
 }
