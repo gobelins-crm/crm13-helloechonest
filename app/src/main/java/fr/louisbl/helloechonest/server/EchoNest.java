@@ -27,7 +27,7 @@ public class EchoNest {
         return sEchoNest;
     }
 
-    public static Playlist getSimilarArtists(int results, String artist ) throws EchoNestException {
+    public static Playlist getArtistRadio(int results, String artist ) throws EchoNestException {
         BasicPlaylistParams params = new BasicPlaylistParams();
         params.addArtist(artist);
         params.setType(BasicPlaylistParams.PlaylistType.ARTIST_RADIO);

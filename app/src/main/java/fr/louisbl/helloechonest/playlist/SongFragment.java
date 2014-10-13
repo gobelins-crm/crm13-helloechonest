@@ -1,19 +1,21 @@
 package fr.louisbl.helloechonest.playlist;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import fr.louisbl.helloechonest.R;
 
+import com.echonest.api.v4.EchoNestException;
+
+import fr.louisbl.helloechonest.R;
 import fr.louisbl.helloechonest.playlist.dummy.DummyContent;
+import fr.louisbl.helloechonest.server.EchoNest;
 
 /**
  * A fragment representing a list of Items.
@@ -74,8 +76,12 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        mAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+        mAdapter = new PlayListAdapter(getActivity());
+        try {
+            ((PlayListAdapter) mAdapter).addAll(EchoNest.getArtistRadio(10, "Alec Empire").getSongs());
+        } catch (EchoNestException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
