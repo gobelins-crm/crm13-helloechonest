@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fr.louisbl.helloechonest.playlist.SongFragment">
+    tools:context="fr.louisbl.helloechonest.playlist.PlayListFragment">
 
     <ListView
         android:id="@android:id/list"

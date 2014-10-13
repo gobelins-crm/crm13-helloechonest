@@ -10,7 +10,7 @@ import com.echonest.api.v4.Song;
 import fr.louisbl.helloechonest.R;
 import fr.louisbl.helloechonest.server.EchoNest;
 
-public class BasicPlayListActivity extends Activity implements SongFragment.OnSongClickedListener {
+public class BasicPlayListActivity extends Activity implements PlayListFragment.OnSongClickedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +19,7 @@ public class BasicPlayListActivity extends Activity implements SongFragment.OnSo
         setContentView(R.layout.activity_basic_play_list);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, SongFragment.newInstance(20, "Helloween"))
+                    .add(R.id.container, PlayListFragment.newInstance(20, "Helloween"))
                     .commit();
         }
     }

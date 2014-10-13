@@ -27,7 +27,7 @@ import fr.louisbl.helloechonest.R;
  * Activities containing this fragment MUST implement the {@link onSongClickedListener}
  * interface.
  */
-public class SongFragment extends Fragment implements AbsListView.OnItemClickListener, LoaderManager.LoaderCallbacks<Playlist> {
+public class PlayListFragment extends Fragment implements AbsListView.OnItemClickListener, LoaderManager.LoaderCallbacks<Playlist> {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RESULTS = "results";
@@ -50,8 +50,8 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
      */
     private ListAdapter mAdapter;
 
-    public static SongFragment newInstance(int results, String artist) {
-        SongFragment fragment = new SongFragment();
+    public static PlayListFragment newInstance(int results, String artist) {
+        PlayListFragment fragment = new PlayListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_RESULTS, results);
         args.putString(ARG_ARTIST, artist);
@@ -63,7 +63,7 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SongFragment() {
+    public PlayListFragment() {
     }
 
     @Override
@@ -86,7 +86,7 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
