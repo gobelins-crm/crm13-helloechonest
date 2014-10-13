@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.echonest.api.v4.EchoNestException;
 
 import fr.louisbl.helloechonest.R;
-import fr.louisbl.helloechonest.services.EchoNest;
+import fr.louisbl.helloechonest.server.EchoNest;
 
 public class BasicPlayListActivity extends Activity {
 
