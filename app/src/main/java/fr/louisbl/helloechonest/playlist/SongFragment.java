@@ -13,6 +13,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.echonest.api.v4.EchoNestException;
+import com.echonest.api.v4.Playlist;
 
 import fr.louisbl.helloechonest.R;
 import fr.louisbl.helloechonest.playlist.dummy.DummyContent;
@@ -80,15 +81,23 @@ public class SongFragment extends Fragment implements AbsListView.OnItemClickLis
         mAdapter = new PlayListAdapter(getActivity());
 
         class PlayListAsyncTask extends AsyncTask<Void, Void, Void> {
+            Playlist playlist;
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    ((PlayListAdapter) mAdapter).addAll(EchoNest.getArtistRadio(10, "Alec Empire").getSongs());
+                    playlist = EchoNest.getArtistRadio(10, "Alec Empire");
                 } catch (EchoNestException e) {
                     e.printStackTrace();
                 }
                 return null;
             }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                ((PlayListAdapter) mAdapter).addAll(playlist.getSongs());
+            }
+
         }
         new PlayListAsyncTask().execute();
     }
